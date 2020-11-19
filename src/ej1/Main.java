@@ -1,5 +1,6 @@
 package ej1;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -19,53 +20,8 @@ public class Main {
 		createEventMatrix();
 	}
 	
-	private void sortDataMatrix() {
-		/*Matrix auxiliar = new Matrix(this.numberOfProcesses);
-		
-		auxiliar.addValue(this.data.getValue(0, 0), 0, 0);
-		auxiliar.addValue(this.data.getValue(0, 0), 0, 1);
-		
-		Double start, duration;
-		
-		for (int i=1; i<this.numberOfProcesses; i++) {
-			start = this.data.getValue(i, 0);
-			duration = this.data.getValue(i, 1);
-			
-			for (int j=0; j<auxiliar.getMatrix().size(); j++) {
-				if (start < auxiliar.getValue(j, 0)) {
-					auxiliar.addValue(start, j, 0);
-					auxiliar.addValue(duration, j, 1);
-				}
-			}
-		}
-		
-		this.data = auxiliar;*/
-	}
-	
-	public void loadDataMatrix() {
-		/*System.out.print("Ingrese la cantidad de procesos (valor entero mayor que 0): ");
-		this.numberOfProcesses = this.scanner.nextInt();
-		
-		System.out.print("Ingrese el porcentaje de uso para E/S (valor entero entre 1 y 100): ");
-		this.percentageOfUse = this.scanner.nextInt();
-		
-		System.out.println();
-		
-		this.data = new Matrix(this.numberOfProcesses);
-
-		for (int i=0; i < this.numberOfProcesses; i++) {
-			// Carga del inicio y duración de los procesos.
-			System.out.print("Ingrese el valor de inicio del proceso " + (i+1) +" (valor decimal, ej: 14,15): ");
-			this.data.addValue(this.scanner.nextDouble(), i, 0);
-			System.out.print("Ingrese el valor de la duración del proceso " + (i+1) +" (valor decimal, ej: 2,15): ");
-			this.data.addValue(this.scanner.nextDouble(), i, 1);
-			
-			// Ordenamos los valores que se ingresan.
-			sortDataMatrix();
-		
-			System.out.println();
-		}*/
-		
+	// IMPORTANTE: Al cargar los procesos ingresarlos ordenado por inicio, de menor a mayor.
+	private void tests() {
 		/*// Datos para hacer las pruebas para ejercicio 1
 		
 		this.numberOfProcesses = 3;
@@ -85,7 +41,7 @@ public class Main {
 		this.data.addValue(14.26, 2, 0);
 		this.data.addValue(1.0, 2, 1);*/
 		
-		// Datos para hacer las pruebas para ejercicio 1
+		/*// Datos para hacer las pruebas para ejercicio 2
 		
 		this.numberOfProcesses = 5;
 		this.percentageOfUse = 90;
@@ -110,7 +66,83 @@ public class Main {
 		
 		// 5ta fila
 		this.data.addValue(15.25, 4, 0);
-		this.data.addValue(0.48, 4, 1);
+		this.data.addValue(0.48, 4, 1);*/
+		
+		// Datos para hacer las pruebas aleatorios
+		
+		this.numberOfProcesses = 5;
+		this.percentageOfUse = 50;
+		
+		this.data = new Matrix(this.numberOfProcesses);
+		
+		// 1er fila
+		this.data.addValue(14.10, 0, 0);
+		this.data.addValue(10.0, 0, 1);
+				
+		// 2da fila
+		this.data.addValue(14.15, 1, 0);
+		this.data.addValue(1.0, 1, 1);
+		
+		// 3er fila
+		this.data.addValue(14.20, 2, 0);
+		this.data.addValue(2.0, 2, 1);
+		
+		// 4ta fila
+		this.data.addValue(14.25, 3, 0);
+		this.data.addValue(3.0, 3, 1);
+		
+		// 5ta fila
+		this.data.addValue(14.30, 4, 0);
+		this.data.addValue(5.0, 4, 1);
+	}
+
+	public void loadDataMatrix() {
+		/*System.out.print("Ingrese la cantidad de procesos (valor entero mayor que 0): ");
+		this.numberOfProcesses = this.scanner.nextInt();
+		
+		System.out.print("Ingrese el porcentaje de uso para E/S (valor entero entre 1 y 100): ");
+		this.percentageOfUse = this.scanner.nextInt();
+		
+		System.out.println();
+		
+		this.data = new Matrix(this.numberOfProcesses);
+
+		Double startOfTheNewProcess, durationOfTheNewProcess, startOfTheOldProcess, durationOfTheOldProcess;
+		
+		// Carga del inicio y duración de los procesos en orden ascendente (de menor a mayor) usando el valor de inicio.
+		for (int i=0; i < this.numberOfProcesses; i++) {
+			if (i==0) {
+				System.out.print("Ingrese el valor de inicio del proceso 1 (valor decimal, ej: 14,15): ");
+				this.data.addValue(this.scanner.nextDouble(), i, 0);
+				System.out.print("Ingrese el valor de la duración del proceso 1 (valor decimal, ej: 2,15): ");
+				this.data.addValue(this.scanner.nextDouble(), i, 1);
+			} else {
+				System.out.print("Ingrese el valor de inicio del proceso " + (i+1) +" (valor decimal, ej: 14,15): ");
+				startOfTheNewProcess = this.scanner.nextDouble();
+				System.out.print("Ingrese el valor de la duración del proceso " + (i+1) +" (valor decimal, ej: 2,15): ");
+				durationOfTheNewProcess = this.scanner.nextDouble();
+			
+				for (int j=0; j<i; j++) {
+					if (startOfTheNewProcess < this.data.getValue(j, 0)) {
+						startOfTheOldProcess = this.data.getValue(j, 0);
+						durationOfTheOldProcess = this.data.getValue(j, 1);
+						
+						this.data.setValue(startOfTheNewProcess, j, 0);
+						this.data.setValue(durationOfTheNewProcess, j, 1);
+						
+						startOfTheNewProcess = startOfTheOldProcess;
+						durationOfTheNewProcess = durationOfTheOldProcess;
+					}
+				}
+				
+				this.data.addValue(startOfTheNewProcess, i, 0);
+				this.data.addValue(durationOfTheNewProcess, i, 1);
+			}
+			
+			System.out.println();
+		}*/
+		
+		tests();
 		
 		System.out.println("Tabla de inicio y duración de los procesos:\n");
 		this.data.showMatrix(false);
@@ -145,7 +177,7 @@ public class Main {
 		}
 		
 		// Demás vueltas
-		
+		// ...
 
 		System.out.println("Tabla de secuencia de eventos:\n");
 		this.events.showMatrix(true);

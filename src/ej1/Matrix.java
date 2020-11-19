@@ -22,6 +22,10 @@ public class Matrix {
 		getMatrix().get(numberOfRow).add(numberOfColumn, value);
 	}
 	
+	public void setValue(Double value, int numberOfRow, int numberOfColumn) {
+		getMatrix().get(numberOfRow).set(numberOfColumn, value);
+	}
+	
 	public Double getValue(int numberOfRow, int numberOfColumn) {
 		return getMatrix().get(numberOfRow).get(numberOfColumn);
 	}
