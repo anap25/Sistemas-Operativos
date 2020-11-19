@@ -15,7 +15,7 @@ public class Main {
 	public Scanner scanner = new Scanner(System.in);
 	
 	public void execute() {
-		loadDataMatrix();
+		loadAndSortTheDataMatrixInAscendingOrder();
 		createUtilizationMatrix();
 		createEventMatrix();
 	}
@@ -41,7 +41,7 @@ public class Main {
 		this.data.addValue(14.26, 2, 0);
 		this.data.addValue(1.0, 2, 1);*/
 		
-		/*// Datos para hacer las pruebas para ejercicio 2
+		// Datos para hacer las pruebas para ejercicio 2
 		
 		this.numberOfProcesses = 5;
 		this.percentageOfUse = 90;
@@ -66,11 +66,11 @@ public class Main {
 		
 		// 5ta fila
 		this.data.addValue(15.25, 4, 0);
-		this.data.addValue(0.48, 4, 1);*/
+		this.data.addValue(0.48, 4, 1);
 		
-		// Datos para hacer las pruebas aleatorios
+		/*// Datos para hacer las pruebas aleatorios
 		
-		this.numberOfProcesses = 5;
+		this.numberOfProcesses = 6;
 		this.percentageOfUse = 50;
 		
 		this.data = new Matrix(this.numberOfProcesses);
@@ -88,15 +88,19 @@ public class Main {
 		this.data.addValue(2.0, 2, 1);
 		
 		// 4ta fila
-		this.data.addValue(14.25, 3, 0);
-		this.data.addValue(3.0, 3, 1);
+		this.data.addValue(14.20, 3, 0);
+		this.data.addValue(7.0, 3, 1);
 		
 		// 5ta fila
-		this.data.addValue(14.30, 4, 0);
-		this.data.addValue(5.0, 4, 1);
+		this.data.addValue(14.25, 4, 0);
+		this.data.addValue(3.0, 4, 1);
+		
+		// 6ta fila
+		this.data.addValue(14.30, 5, 0);
+		this.data.addValue(5.0, 5, 1);*/
 	}
 
-	public void loadDataMatrix() {
+	public void loadAndSortTheDataMatrixInAscendingOrder() {
 		/*System.out.print("Ingrese la cantidad de procesos (valor entero mayor que 0): ");
 		this.numberOfProcesses = this.scanner.nextInt();
 		
