@@ -37,15 +37,15 @@ public class Matrix {
 		for (int i=0; i<getMatrix().size(); i++) {
 			for (int j=0; j<getMatrix().get(i).size(); j++) {
 				if (ignoreFirstRow && j==0) {
-					matrix.append("P/T	|" + getValue(i, j) + "\n|	");
+					matrix.append("P/T	|" + String.format("%.4f", getValue(i, j)) + "\n|	");
 					i++;
 					ignoreFirstRow = false;
 				}
 				
 				if (j==0) {					
-					matrix.append("Proc. " + numberOfProcess + "	|	" + getValue(i, j));
+					matrix.append("Proc. " + numberOfProcess + "	|	" + String.format("%.4f", getValue(i, j)));
 				} else {
-					matrix.append("	|	" + getValue(i, j));
+					matrix.append("	|	" + String.format("%.4f", getValue(i, j)));
 				}
 			}
 			numberOfProcess++;

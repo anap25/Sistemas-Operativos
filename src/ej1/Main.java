@@ -1,5 +1,6 @@
 package ej1;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -12,13 +13,7 @@ public class Main {
 	private Matrix utilization;
 	private Matrix events;
 	
-	public Scanner scanner = new Scanner(System.in);
-	
-	public void execute() {
-		loadAndSortTheDataMatrixInAscendingOrder();
-		createUtilizationMatrix();
-		createEventMatrix();
-	}
+	private Scanner scanner = new Scanner(System.in);
 	
 	// IMPORTANTE: Al cargar los procesos ingresarlos ordenado por inicio, de menor a mayor.
 	private void tests() {
@@ -114,34 +109,32 @@ public class Main {
 		Double startOfTheNewProcess, durationOfTheNewProcess, startOfTheOldProcess, durationOfTheOldProcess;
 		
 		// Carga del inicio y duración de los procesos en orden ascendente (de menor a mayor) usando el valor de inicio.
-		for (int i=0; i < this.numberOfProcesses; i++) {
-			if (i==0) {
-				System.out.print("Ingrese el valor de inicio del proceso 1 (valor decimal, ej: 14,15): ");
-				this.data.addValue(this.scanner.nextDouble(), i, 0);
-				System.out.print("Ingrese el valor de la duración del proceso 1 (valor decimal, ej: 2,15): ");
-				this.data.addValue(this.scanner.nextDouble(), i, 1);
-			} else {
-				System.out.print("Ingrese el valor de inicio del proceso " + (i+1) +" (valor decimal, ej: 14,15): ");
-				startOfTheNewProcess = this.scanner.nextDouble();
-				System.out.print("Ingrese el valor de la duración del proceso " + (i+1) +" (valor decimal, ej: 2,15): ");
-				durationOfTheNewProcess = this.scanner.nextDouble();
-			
-				for (int j=0; j<i; j++) {
-					if (startOfTheNewProcess < this.data.getValue(j, 0)) {
-						startOfTheOldProcess = this.data.getValue(j, 0);
-						durationOfTheOldProcess = this.data.getValue(j, 1);
-						
-						this.data.setValue(startOfTheNewProcess, j, 0);
-						this.data.setValue(durationOfTheNewProcess, j, 1);
-						
-						startOfTheNewProcess = startOfTheOldProcess;
-						durationOfTheNewProcess = durationOfTheOldProcess;
-					}
+		System.out.print("Ingrese el valor de inicio del proceso 1 (valor decimal, ej: 14,15): ");
+		this.data.addValue(this.scanner.nextDouble(), 0, 0);
+		System.out.print("Ingrese el valor de la duración del proceso 1 (valor decimal, ej: 2,15): ");
+		this.data.addValue(this.scanner.nextDouble(), 0, 1);
+		
+		for (int i=1; i < this.numberOfProcesses; i++) {	
+			System.out.print("Ingrese el valor de inicio del proceso " + (i+1) +" (valor decimal, ej: 14,15): ");
+			startOfTheNewProcess = this.scanner.nextDouble();
+			System.out.print("Ingrese el valor de la duración del proceso " + (i+1) +" (valor decimal, ej: 2,15): ");
+			durationOfTheNewProcess = this.scanner.nextDouble();
+		
+			for (int j=0; j<i; j++) {
+				if (startOfTheNewProcess < this.data.getValue(j, 0)) {
+					startOfTheOldProcess = this.data.getValue(j, 0);
+					durationOfTheOldProcess = this.data.getValue(j, 1);
+					
+					this.data.setValue(startOfTheNewProcess, j, 0);
+					this.data.setValue(durationOfTheNewProcess, j, 1);
+					
+					startOfTheNewProcess = startOfTheOldProcess;
+					durationOfTheNewProcess = durationOfTheOldProcess;
 				}
-				
-				this.data.addValue(startOfTheNewProcess, i, 0);
-				this.data.addValue(durationOfTheNewProcess, i, 1);
 			}
+			
+			this.data.addValue(startOfTheNewProcess, i, 0);
+			this.data.addValue(durationOfTheNewProcess, i, 1);
 			
 			System.out.println();
 		}*/
@@ -151,6 +144,7 @@ public class Main {
 		System.out.println("Tabla de inicio y duración de los procesos:\n");
 		this.data.showMatrix(false);
 	}
+	
 	
 	public void createUtilizationMatrix() {
 		this.utilization = new Matrix(this.numberOfProcesses);
@@ -172,6 +166,9 @@ public class Main {
 	
 	public void createEventMatrix() {
 		this.events = new Matrix(this.numberOfProcesses + 1);
+	
+		int runningProcesses = 0;
+		int processesExecuted;
 		
 		// 1ra vuelta
 		this.events.addValue(this.data.getValue(0, 0), 0, 0);
@@ -180,11 +177,51 @@ public class Main {
 			this.events.addValue(this.data.getValue(i - 1, 1), i, 0);
 		}
 		
-		// Demás vueltas
-		// ...
+		// Demás vueltas...
+		for (int i=1; i<this.numberOfProcesses; i++) {
+			runningProcesses++;
+			
+			Double startOfTheProcess = this.data.getValue(i, 0);
+			Double durationOfTheProcess = this.data.getValue(i, 1);
+			
+			processesExecuted = 0;
+		
+			int differenceBetweenProcess = (int) (startOfTheProcess*100 - this.data.getValue(i-1, 0)*100);
+			
+			for (int j=1; j<this.numberOfProcesses+1; j++) {
+				if (processesExecuted < runningProcesses) {
+					if (this.events.getValue(j, i-1) > 0) {
+						Double valueToSubtract = differenceBetweenProcess*this.utilization.getValue(runningProcesses-1, 2);
+						
+						if (valueToSubtract <= this.data.getValue(i-1, 1)) {
+							// El proceso NO termina antes.
+							this.events.addValue(this.data.getValue(i-1, 1)-valueToSubtract, j, i);
+							processesExecuted++;
+						} else {
+							// El proceso termina antes. Ver cual termina antes, y contar los minutos en los que termina.
+							// ...
+						}
+					} else {
+						// Llenamos de 0s lo que ya terminaron.
+						// ...
+					}
+				} else {
+					// Copiamos los procesos restantes porque no se iniciaron.
+					if (j <= this.numberOfProcesses) {
+						this.events.addValue(this.data.getValue(j-1, 1), j, i);						
+					}
+				}
+			}
+		}
 
 		System.out.println("Tabla de secuencia de eventos:\n");
 		this.events.showMatrix(true);
+	}
+	
+	public void execute() {
+		loadAndSortTheDataMatrixInAscendingOrder();
+		createUtilizationMatrix();
+		createEventMatrix();
 	}
 	
 	public static void main(String[] args) {
