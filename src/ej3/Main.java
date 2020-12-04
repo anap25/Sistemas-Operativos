@@ -1,4 +1,4 @@
-package ej1;
+package ej3;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -132,9 +132,9 @@ public class Main {
 	}
 	
 	public void loadAndSortTheDataMatrixInAscendingOrder() {
-		loadAndSortTheData();
+		//loadAndSortTheData();
 		
-		//tests();
+		tests();
 		
 		System.out.println("Tabla de inicio y duración de los procesos:\n");
 		this.data.showMatrix(false);
