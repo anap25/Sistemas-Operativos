@@ -218,7 +218,7 @@ public class Main {
 			// Realizamos la operación y cargamos el nuevo valor, solo para los procesos que se estan ejecutando y no terminaron aún.
 			for (int position=0; position<list.size(); position++) {
 				Double newValue = this.events.getValue(list.get(position)+1, minute-1) - (this.utilization.getValue(list.size()-1, 2)*1);
-				// duda en position de events.getValue CREO que esta bien.
+				
 				if (newValue <= 0.001) {
 					this.events.addValue(0.0, list.get(position)+1, minute);					
 				} else {
@@ -230,7 +230,7 @@ public class Main {
 			int numberOfColumn = minute-1;
 			
 			for (int numberOfRow=1; numberOfRow<this.events.getSize(); numberOfRow++) {
-				Double oldValue = this.events.getValue(numberOfRow, numberOfColumn); // aqui tira error Index 22 out of bounds for length 22
+				Double oldValue = this.events.getValue(numberOfRow, numberOfColumn); 
 
 				int position;
 				boolean located = false;
