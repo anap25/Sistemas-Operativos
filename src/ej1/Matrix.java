@@ -30,31 +30,61 @@ public class Matrix {
 		return getMatrix().get(numberOfRow).get(numberOfColumn);
 	}
 	
-	public void showMatrix(boolean ignoreFirstRow) {
+	public ArrayList<Double> getRow(int numberOfRow) {
+		return this.matrix.get(numberOfRow);
+	}
+	
+	public int getSize() {
+		return this.matrix.size();
+	}
+	
+	public void showMatrix(boolean ignoreFirstValue) {
 		StringBuilder matrix = new StringBuilder("|	");
 		
 		int numberOfProcess = 1;
 		for (int i=0; i<getMatrix().size(); i++) {
 			for (int j=0; j<getMatrix().get(i).size(); j++) {
-				if (ignoreFirstRow && j==0) {
-					matrix.append("P/T	|" + String.format("%.4f", getValue(i, j)) + "\n|	");
-					i++;
-					ignoreFirstRow = false;
-				}
-				
-				if (j==0) {					
-					matrix.append("Proc. " + numberOfProcess + "	|	" + String.format("%.4f", getValue(i, j)));
+				if (ignoreFirstValue) {
+					numberOfProcess = 0;
+					if (i==0 && j==0) {
+						matrix.append("P/T	|	" + String.format("%.4f", getValue(i, j)) + "	|	");
+					} else {						
+						matrix.append(String.format("%.4f", getValue(i, j)) + "	|	");
+					}
+					
 				} else {
-					matrix.append("	|	" + String.format("%.4f", getValue(i, j)));
+					if (j==0) {					
+						matrix.append("Proc. " + numberOfProcess + "	|	" + String.format("%.4f", getValue(i, j)));
+					} else {
+						matrix.append("	|	" + String.format("%.4f", getValue(i, j)));
+					}
 				}
 			}
+			
+			ignoreFirstValue = false;
 			numberOfProcess++;
-			matrix.append("\n|	");
+			matrix.append("	|\n|	"); // primer fila, ultima columna es de aqui donde sale esa ultima |
 		}
 		
 		matrix.deleteCharAt(matrix.length() - 2);
 		
 		System.out.println(matrix);
+	}
+	
+	public String toString() {
+		StringBuilder matrix = new StringBuilder("|	");
+		
+		for (int i=0; i<getMatrix().size(); i++) {
+			for (int j=0; j<getMatrix().get(i).size(); j++) {
+				matrix.append("	|	" + String.format("%.4f", getValue(i, j)));
+			}
+			
+			matrix.append("	|\n|	");
+		}
+		
+		matrix.deleteCharAt(matrix.length() - 2);
+		
+		return matrix.toString();
 	}
 	
 }

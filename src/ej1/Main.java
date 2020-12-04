@@ -1,6 +1,5 @@
 package ej1;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -62,37 +61,6 @@ public class Main {
 		// 5ta fila
 		this.data.addValue(15.25, 4, 0);
 		this.data.addValue(0.48, 4, 1);
-		
-		/*// Datos para hacer las pruebas aleatorios
-		
-		this.numberOfProcesses = 6;
-		this.percentageOfUse = 50;
-		
-		this.data = new Matrix(this.numberOfProcesses);
-		
-		// 1er fila
-		this.data.addValue(14.10, 0, 0);
-		this.data.addValue(10.0, 0, 1);
-				
-		// 2da fila
-		this.data.addValue(14.15, 1, 0);
-		this.data.addValue(1.0, 1, 1);
-		
-		// 3er fila
-		this.data.addValue(14.20, 2, 0);
-		this.data.addValue(2.0, 2, 1);
-		
-		// 4ta fila
-		this.data.addValue(14.20, 3, 0);
-		this.data.addValue(7.0, 3, 1);
-		
-		// 5ta fila
-		this.data.addValue(14.25, 4, 0);
-		this.data.addValue(3.0, 4, 1);
-		
-		// 6ta fila
-		this.data.addValue(14.30, 5, 0);
-		this.data.addValue(5.0, 5, 1);*/
 	}
 
 	public void loadAndSortTheDataMatrixInAscendingOrder() {
@@ -143,8 +111,8 @@ public class Main {
 		
 		System.out.println("Tabla de inicio y duración de los procesos:\n");
 		this.data.showMatrix(false);
+		//System.out.println(this.data);
 	}
-	
 	
 	public void createUtilizationMatrix() {
 		this.utilization = new Matrix(this.numberOfProcesses);
@@ -162,14 +130,47 @@ public class Main {
 		
 		System.out.println("Tabla de utilización de los procesos con " + this.percentageOfUse + "% de espera de E/S:\n");
 		this.utilization.showMatrix(false);
+		//System.out.println(this.utilization);
+	}
+	
+	// La creación de la tabla de eventos finaliza cuando toda una columna se llena de 0s.
+	private boolean finished() {
+		int numberOfRow = 1;
+		
+		while (numberOfRow < this.events.getSize()) {
+			ArrayList<Double> row = this.events.getRow(numberOfRow);
+			
+			if (row.get(row.size()-1).equals(0.0)) {
+				numberOfRow++;				
+			} else {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	// Obtenemos una lista de posiciones de la matriz de datos, las cuales cumplen con que no se hayan iniciado todavia y además no haya terminado todavia.
+	private ArrayList<Integer> listOfUnfinishedProcesses(Double time) {
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		int numberOfRow = 0;
+		
+		while (numberOfRow < this.data.getSize()) {
+			ArrayList<Double> eventMatrixRow = this.events.getRow(numberOfRow+1);
+			
+			if (this.data.getValue(numberOfRow, 0)<time && this.events.getValue(numberOfRow+1, eventMatrixRow.size()-1) != 0.0) {
+				list.add(numberOfRow);
+			}
+			
+			numberOfRow++;
+		}
+		
+		return list;
 	}
 	
 	public void createEventMatrix() {
 		this.events = new Matrix(this.numberOfProcesses + 1);
 	
-		int runningProcesses = 0;
-		int processesExecuted;
-		
 		// 1ra vuelta
 		this.events.addValue(this.data.getValue(0, 0), 0, 0);
 		
@@ -177,45 +178,58 @@ public class Main {
 			this.events.addValue(this.data.getValue(i - 1, 1), i, 0);
 		}
 		
-		// Demás vueltas...
-		for (int i=1; i<this.numberOfProcesses; i++) {
-			runningProcesses++;
-			
-			Double startOfTheProcess = this.data.getValue(i, 0);
-			Double durationOfTheProcess = this.data.getValue(i, 1);
-			
-			processesExecuted = 0;
+		// Resto de vueltas
+		ArrayList<Integer> list;
+		int minute = 1;
 		
-			int differenceBetweenProcess = (int) (startOfTheProcess*100 - this.data.getValue(i-1, 0)*100);
+		while (! finished()) {
+			Double time = this.data.getValue(0, 0) + (double) minute/100;
+			this.events.addValue(time, 0, minute);
 			
-			for (int j=1; j<this.numberOfProcesses+1; j++) {
-				if (processesExecuted < runningProcesses) {
-					if (this.events.getValue(j, i-1) > 0) {
-						Double valueToSubtract = differenceBetweenProcess*this.utilization.getValue(runningProcesses-1, 2);
-						
-						if (valueToSubtract <= this.data.getValue(i-1, 1)) {
-							// El proceso NO termina antes.
-							this.events.addValue(this.data.getValue(i-1, 1)-valueToSubtract, j, i);
-							processesExecuted++;
-						} else {
-							// El proceso termina antes. Ver cual termina antes, y contar los minutos en los que termina.
-							// ...
-						}
-					} else {
-						// Llenamos de 0s lo que ya terminaron.
-						// ...
-					}
+			list = listOfUnfinishedProcesses(time);
+			
+			// Realizamos la operación y cargamos el nuevo valor, solo para los procesos que se estan ejecutando y no terminaron aún.
+			for (int position=0; position<list.size(); position++) {
+				Double newValue = this.events.getValue(list.get(position)+1, minute-1) - (this.utilization.getValue(list.size()-1, 2)*1);
+				// duda en position de events.getValue CREO que esta bien.
+				if (newValue <= 0.001) {
+					this.events.addValue(0.0, list.get(position)+1, minute);					
 				} else {
-					// Copiamos los procesos restantes porque no se iniciaron.
-					if (j <= this.numberOfProcesses) {
-						this.events.addValue(this.data.getValue(j-1, 1), j, i);						
-					}
+					this.events.addValue(newValue, list.get(position)+1, minute);					
 				}
 			}
+			
+			// Copiamos los valores de los procesos que no se ejecutaron, o que ya terminaron.
+			int numberOfColumn = minute-1;
+			
+			for (int numberOfRow=1; numberOfRow<this.events.getSize(); numberOfRow++) {
+				Double oldValue = this.events.getValue(numberOfRow, numberOfColumn); // aqui tira error Index 22 out of bounds for length 22
+
+				int position;
+				boolean located = false;
+				int i = 0;
+				
+				while (i<list.size() && located==false) {
+					position = list.get(i) + 1;
+					
+					if (numberOfRow == position) {
+						located = true;
+					} else {
+						i++;						
+					}
+				}
+				
+				if (! located) {
+					this.events.addValue(oldValue, numberOfRow, numberOfColumn+1);
+				}
+			}
+			
+			minute++;
 		}
 
 		System.out.println("Tabla de secuencia de eventos:\n");
 		this.events.showMatrix(true);
+		//System.out.println(this.events);
 	}
 	
 	public void execute() {
