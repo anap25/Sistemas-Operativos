@@ -86,8 +86,8 @@ public class Main {
 		this.data.addValue(0.48, 4, 1);
 	}
 
-	public void loadAndSortTheDataMatrixInAscendingOrder() {
-		/*System.out.print("Ingrese la cantidad de procesos (valor entero mayor que 0): ");
+	private void loadAndSortTheData() {
+		System.out.print("Ingrese la cantidad de procesos (valor entero mayor que 0): ");
 		this.numberOfProcesses = this.scanner.nextInt();
 		
 		System.out.print("Ingrese el porcentaje de uso para E/S (valor entero entre 1 y 100): ");
@@ -126,11 +126,15 @@ public class Main {
 			
 			this.data.addValue(startOfTheNewProcess, i, 0);
 			this.data.addValue(durationOfTheNewProcess, i, 1);
-			
-			System.out.println();
-		}*/
+		}
 		
-		tests();
+		System.out.println();
+	}
+	
+	public void loadAndSortTheDataMatrixInAscendingOrder() {
+		loadAndSortTheData();
+		
+		//tests();
 		
 		System.out.println("Tabla de inicio y duración de los procesos:\n");
 		this.data.showMatrix(false);
