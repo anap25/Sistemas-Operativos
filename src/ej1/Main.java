@@ -16,6 +16,29 @@ public class Main {
 	
 	// IMPORTANTE: Al cargar los procesos ingresarlos ordenado por inicio, de menor a mayor.
 	private void tests() {
+		/*// Datos para hacer las pruebas del ejercicio hecho en clase practica del pdf
+		
+		this.numberOfProcesses = 4;
+		this.percentageOfUse = 80;
+		
+		this.data = new Matrix(this.numberOfProcesses);
+		
+		// 1er fila
+		this.data.addValue(10.00, 0, 0);
+		this.data.addValue(4.0, 0, 1);
+		
+		// 2da fila
+		this.data.addValue(10.10, 1, 0);
+		this.data.addValue(3.0, 1, 1);
+		
+		// 3er fila
+		this.data.addValue(10.15, 2, 0);
+		this.data.addValue(2.0, 2, 1);
+		
+		// 4ta fila
+		this.data.addValue(10.20, 3, 0);
+		this.data.addValue(2.0, 3, 1);*/
+		
 		/*// Datos para hacer las pruebas para ejercicio 1
 		
 		this.numberOfProcesses = 3;
